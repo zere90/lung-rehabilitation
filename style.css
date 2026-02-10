@@ -1,0 +1,601 @@
+:root {
+  --primary: #1E88E5;
+  --dark: #0D47A1;
+  --light: #E3F2FD;
+  --text: #1f2d3d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f6fbff;
+  color: var(--text);
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  background: white;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--dark);
+}
+
+.nav a {
+  text-decoration: none;
+  margin-left: 30px;
+  font-weight: 500;
+  color: var(--dark);
+  transition: 0.3s;
+}
+
+.nav a:hover {
+  color: var(--primary);
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+  background: linear-gradient(to bottom right, var(--light), white);
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 42px;
+  color: var(--dark);
+  margin-bottom: 15px;
+}
+
+.hero p {
+  font-size: 18px;
+  color: #555;
+}
+
+.btn {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 14px 30px;
+  border-radius: 10px;
+  text-decoration: none;
+  margin-top: 30px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: var(--dark);
+}
+
+/* =========================
+   SECTION TITLE
+========================= */
+
+.section-title {
+  text-align: center;
+  font-size: 32px;
+  color: var(--dark);
+  margin-bottom: 50px;
+  font-weight: 700;
+}
+
+/* =========================
+   ADVANTAGES
+========================= */
+
+.advantages {
+  padding: 80px 0;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+  gap: 30px;
+}
+
+.card {
+  background: white;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h3 {
+  color: var(--dark);
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #555;
+}
+
+/* =========================
+   STEPS (как в Figma)
+========================= */
+
+.steps {
+  padding: 80px 0;
+  background: #f0f7ff;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+  gap: 25px;
+  margin-top: 40px;
+}
+
+.step-card {
+  background: white;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  position: relative;
+}
+
+.step-number {
+  width: 50px;
+  height: 50px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.step-card h4 {
+  color: var(--dark);
+  margin-bottom: 10px;
+}
+
+/* =========================
+   MATERIALS GRID
+========================= */
+
+.materials-section {
+  padding: 80px 0;
+}
+
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+  gap: 30px;
+}
+
+.material-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.material-card:hover {
+  transform: translateY(-5px);
+}
+
+.material-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.material-card .content {
+  padding: 20px;
+}
+
+.category {
+  display: inline-block;
+  background: var(--light);
+  color: var(--dark);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.test-section {
+  padding: 80px 0;
+}
+
+.question-card {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.question-card p {
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 15px;
+}
+
+.question-card label {
+  display: block;
+  margin-bottom: 10px;
+  cursor: pointer;
+  color: #444;
+}
+
+.result-box {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.success {
+  background: #E8F5E9;
+  padding: 25px;
+  border-radius: 16px;
+}
+
+.fail {
+  background: #FFEBEE;
+  padding: 25px;
+  border-radius: 16px;
+}
+
+.center {
+  text-align: center;
+}
+.contact-section {
+  padding: 80px 0;
+}
+
+.contact-card {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.contact-info h3 {
+  color: var(--dark);
+  margin-bottom: 15px;
+}
+
+.contact-info p {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+/* активная ссылка */
+.nav a.active {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+/* адаптив */
+@media (max-width: 768px) {
+  .contact-card {
+    grid-template-columns: 1fr;
+  }
+}
+/* =========================
+   COURSE GRID
+========================= */
+
+.course {
+  padding: 80px 0;
+}
+
+.lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.lesson-card {
+  background: white;
+  padding: 35px;
+  border-radius: 22px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.lesson-card:hover {
+  transform: translateY(-5px);
+}
+
+.number {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.lesson-card h3 {
+  margin: 0 0 10px;
+  color: var(--dark);
+  font-size: 20px;
+}
+
+.lesson-card p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.lesson-card a {
+  text-decoration: none;
+  color: var(--primary);
+  font-weight: 600;
+}
+.lesson-box {
+  background: white;
+  padding: 35px;
+  border-radius: 22px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  margin-bottom: 30px;
+}
+
+.lesson-box h3 {
+  color: var(--dark);
+  margin-bottom: 15px;
+}
+
+.lesson-box ul {
+  padding-left: 20px;
+}
+
+.lesson-box li {
+  margin-bottom: 8px;
+}
+
+.quote {
+  background: var(--light);
+  padding: 25px;
+  border-left: 5px solid var(--primary);
+  border-radius: 15px;
+  margin-bottom: 30px;
+  font-style: italic;
+}
+
+.lesson-nav {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--dark);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.3s ease;
+  z-index: 9999;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.profile-section {
+  padding: 60px 0 120px 0; /* меньше сверху */
+}
+
+.profile-card {
+  background: white;
+  padding: 50px;
+  border-radius: 25px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+  text-align: center;
+  max-width: 700px;
+  margin: 40px auto 0 auto; /* чуть выше */
+}
+
+.profile-card h2 {
+  color: var(--dark);
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 18px;
+  background: #e3f2fd;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary), var(--dark));
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  /* HEADER */
+  .header-inner {
+    flex-direction: column;
+    height: auto;
+    padding: 15px 0;
+  }
+
+  .nav {
+    margin-top: 10px;
+  }
+
+  .nav a {
+    margin: 0 10px;
+    font-size: 14px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 60px 20px;
+  }
+
+  .hero h1 {
+    font-size: 26px;
+  }
+
+  .hero p {
+    font-size: 15px;
+  }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-size: 22px;
+  }
+
+  /* CARDS */
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .lesson-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .materials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* CONTACT */
+  .contact-card {
+    grid-template-columns: 1fr;
+    padding: 25px;
+  }
+
+  /* BUTTON */
+  .btn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+}
+/* =========================
+   MOBILE MENU
+========================= */
+
+.burger {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--dark);
+}
+
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  background: white;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.mobile-nav a {
+  padding: 10px 0;
+  text-decoration: none;
+  color: var(--dark);
+  font-weight: 500;
+}
+
+/* MOBILE VERSION */
+@media (max-width: 768px) {
+
+  .nav {
+    display: none;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .mobile-nav.active {
+    display: flex;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .section-title {
+    font-size: 24px;
+  }
+
+}
