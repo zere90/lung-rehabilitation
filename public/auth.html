@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Вход / Регистрация</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .auth-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--light) 0%, white 100%);
+      padding: 20px;
+    }
+
+    .auth-container {
+      background: white;
+      padding: 50px;
+      border-radius: 25px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .auth-container h2 {
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--dark);
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #E3F2FD;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      background: #f0f7ff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--dark);
+      transition: 0.3s;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .auth-form {
+      display: none;
+    }
+
+    .auth-form.active {
+      display: block;
+    }
+
+    .error-message {
+      background: #FFEBEE;
+      color: #C62828;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .success-message {
+      background: #E8F5E9;
+      color: #2E7D32;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-container">
+    
+    <div class="logo" style="text-align: center; margin-bottom: 30px;">
+      <a href="index.html" style="font-size: 24px; font-weight: 700; color: var(--dark); text-decoration: none;">
+        Реабилитация лёгких
+      </a>
+    </div>
+
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="showTab('login')">Вход</button>
+      <button class="tab-btn" onclick="showTab('register')">Регистрация</button>
+    </div>
+
+    <div id="errorMessage" class="error-message"></div>
+    <div id="successMessage" class="success-message"></div>
+
+    <!-- ФОРМА ВХОДА -->
+    <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
+      <h2>Вход в систему</h2>
+      
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label>Пароль</label>
+        <input type="password" name="password" required>
+      </div>
+
+      <button type="submit" class="btn" style="width: 100%;">Войти</button>
+    </form>
+
+    <!-- ФОРМА РЕГИСТРАЦИИ -->
+    <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+      <h2>Создать аккаунт</h2>
+      
+      <div class="form-group">
+        <label>Полное имя</label>
+        <input type="text" name="full_name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Логин</label>
+        <input type="text" name="username" required>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label>Пароль</label>
+        <input type="password" name="password" required minlength="6">
+      </div>
+
+      <div class="form-group">
+        <label>Подтвердите пароль</label>
+        <input type="password" name="confirm_password" required minlength="6">
+      </div>
+
+      <button type="submit" class="btn" style="width: 100%;">Зарегистрироваться</button>
+    </form>
+
+  </div>
+</div>
+
+<script>
+function showTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+  
+  if (tab === 'login') {
+    document.querySelector('.tab-btn:first-child').classList.add('active');
+    document.getElementById('loginForm').classList.add('active');
+  } else {
+    document.querySelector('.tab-btn:last-child').classList.add('active');
+    document.getElementById('registerForm').classList.add('active');
+  }
+  
+  hideMessages();
+}
+
+function showError(message) {
+  const errorDiv = document.getElementById('errorMessage');
+  errorDiv.textContent = message;
+  errorDiv.style.display = 'block';
+  document.getElementById('successMessage').style.display = 'none';
+}
+
+function showSuccess(message) {
+  const successDiv = document.getElementById('successMessage');
+  successDiv.textContent = message;
+  successDiv.style.display = 'block';
+  document.getElementById('errorMessage').style.display = 'none';
+}
+
+function hideMessages() {
+  document.getElementById('errorMessage').style.display = 'none';
+  document.getElementById('successMessage').style.display = 'none';
+}
+
+async function handleLogin(event) {
+  event.preventDefault();
+  hideMessages();
+  
+  const formData = new FormData(event.target);
+  const data = {
+    email: formData.get('email'),
+    password: formData.get('password')
+  };
+
+  try {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem('user', JSON.stringify(result.user));
+      showSuccess('Вход выполнен успешно!');
+      setTimeout(() => window.location.href = 'index.html', 1000);
+    } else {
+      showError(result.error || 'Ошибка входа');
+    }
+  } catch (error) {
+    showError('Ошибка соединения с сервером');
+  }
+}
+
+async function handleRegister(event) {
+  event.preventDefault();
+  hideMessages();
+  
+  const formData = new FormData(event.target);
+  const password = formData.get('password');
+  const confirmPassword = formData.get('confirm_password');
+
+  if (password !== confirmPassword) {
+    showError('Пароли не совпадают');
+    return;
+  }
+
+  const data = {
+    username: formData.get('username'),
+    email: formData.get('email'),
+    password: password,
+    full_name: formData.get('full_name')
+  };
+
+  try {
+    const response = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      showSuccess('Регистрация успешна! Переход ко входу...');
+      event.target.reset();
+      setTimeout(() => showTab('login'), 2000);
+    } else {
+      showError(result.error || 'Ошибка регистрации');
+    }
+  } catch (error) {
+    showError('Ошибка соединения с сервером');
+  }
+}
+
+// Проверка авторизации при загрузке
+window.addEventListener('load', () => {
+  const user = localStorage.getItem('user');
+  if (user) {
+    window.location.href = 'index.html';
+  }
+});
+</script>
+
+</body>
+</html>

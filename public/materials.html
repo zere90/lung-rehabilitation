@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Материалы</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header class="header">
+  <div class="container header-inner">
+
+    <div class="logo">
+      <a href="index.html">Реабилитация лёгких</a>
+    </div>
+
+    <nav class="nav">
+      <a href="index.html">Главная</a>
+      <a href="education.html">Обучение</a>
+      <a href="materials.html">Материалы</a>
+      <a href="profile.html">Личный кабинет</a>
+    </nav>
+
+    <div class="burger" onclick="toggleMenu()">☰</div>
+
+  </div>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="index.html">Главная</a>
+    <a href="education.html">Обучение</a>
+    <a href="materials.html">Материалы</a>
+    <a href="profile.html">Личный кабинет</a>
+  </div>
+</header>
+<section class="container">
+
+  <h1 style="text-align:center; color:var(--dark); margin-bottom:40px;">
+    Новости и материалы
+  </h1>
+
+  <!-- ФИЛЬТР -->
+  <div class="filter-buttons" style="text-align:center; margin-bottom:40px;">
+    <button onclick="filterMaterials('all')" class="btn">Все</button>
+    <button onclick="filterMaterials('news')" class="btn">Новости</button>
+    <button onclick="filterMaterials('research')" class="btn">Исследования</button>
+  </div>
+
+  <div class="materials-grid">
+
+    <div class="material-card" data-type="research">
+      <img src="https://picsum.photos/400/250?1">
+      <div class="content">
+        <span class="category">Исследования</span>
+        <h3>Новые методы дыхательной терапии</h3>
+        <p>Клинические данные о современных подходах к восстановлению дыхательной функции.</p>
+        <a href="#" class="btn">Читать</a>
+      </div>
+    </div>
+
+    <div class="material-card" data-type="news">
+      <img src="https://picsum.photos/400/250?2">
+      <div class="content">
+        <span class="category">Новости</span>
+        <h3>Обновление клинических рекомендаций</h3>
+        <p>Министерство здравоохранения опубликовало новые стандарты реабилитации.</p>
+        <a href="#" class="btn">Читать</a>
+      </div>
+    </div>
+
+    <div class="material-card" data-type="research">
+      <img src="https://picsum.photos/400/250?3">
+      <div class="content">
+        <span class="category">Исследования</span>
+        <h3>Физическая активность после терапии</h3>
+        <p>Результаты наблюдения за пациентами в течение 12 месяцев.</p>
+        <a href="#" class="btn">Читать</a>
+      </div>
+    </div>
+
+    <div class="material-card" data-type="news">
+      <img src="https://picsum.photos/400/250?4">
+      <div class="content">
+        <span class="category">Новости</span>
+        <h3>Международный конгресс по реабилитации</h3>
+        <p>Обсуждение новых подходов и методик восстановления пациентов.</p>
+        <a href="#" class="btn">Читать</a>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<footer style="text-align:center; padding:40px;">
+  © 2026 Образовательный проект
+</footer>
+
+<script>
+function filterMaterials(type) {
+  const cards = document.querySelectorAll('.material-card');
+
+  cards.forEach(card => {
+    if (type === 'all') {
+      card.style.display = 'block';
+    } else {
+      card.style.display = card.dataset.type === type ? 'block' : 'none';
+    }
+  });
+}
+</script>
+<script src="menu.js"></script>
+</body>
+</html>
