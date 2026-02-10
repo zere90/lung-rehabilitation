@@ -12,6 +12,9 @@ const { User, LessonProgress, TestResult, Certificate } = require('./models');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Важно для Render / прокси (иначе secure cookies могут не работать)
+app.set('trust proxy', 1);
+
 // ============ ПОДКЛЮЧЕНИЕ К MONGODB ============
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/lung-rehab';
 
@@ -22,7 +25,20 @@ mongoose.connect(MONGODB_URI)
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+
+// ============ СТАТИКА + ГЛАВНАЯ СТРАНИЦА ============
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// (не обязательно, но очень удобно для проверки что сервер жив)
+app.get("/health", (req, res) => {
+  res.json({ ok: true });
+});
+
+// ============ СЕССИИ ============
 app.use(session({
   secret: process.env.SESSION_SECRET || 'lung-rehab-secret-key-2026',
   resave: false,
@@ -31,15 +47,17 @@ app.use(session({
     mongoUrl: MONGODB_URI,
     touchAfter: 24 * 3600 // Обновлять сессию раз в 24 часа
   }),
-  cookie: { 
+  cookie: {
     maxAge: 24 * 60 * 60 * 1000, // 24 часа
-    secure: process.env.NODE_ENV === 'production' // HTTPS в продакшене
+    secure: process.env.NODE_ENV === 'production', // HTTPS в продакшене
+    sameSite: 'lax'
   }
 }));
 
-// Создание папки для сертификатов
-if (!fs.existsSync('./certificates')) {
-  fs.mkdirSync('./certificates');
+// ============ ПАПКА ДЛЯ СЕРТИФИКАТОВ ============
+const certificatesDir = path.join(__dirname, 'certificates');
+if (!fs.existsSync(certificatesDir)) {
+  fs.mkdirSync(certificatesDir, { recursive: true });
 }
 
 // Middleware для проверки авторизации
@@ -61,7 +79,7 @@ app.post('/api/register', async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     const user = new User({
       username,
       email,
@@ -113,15 +131,15 @@ app.post('/api/login', async (req, res) => {
 
     req.session.userId = user._id.toString();
     req.session.username = user.username;
-    
-    res.json({ 
-      success: true, 
-      user: { 
-        id: user._id, 
-        username: user.username, 
+
+    res.json({
+      success: true,
+      user: {
+        id: user._id,
+        username: user.username,
         email: user.email,
         full_name: user.full_name
-      } 
+      }
     });
   } catch (error) {
     console.error('Ошибка входа:', error);
@@ -158,16 +176,16 @@ app.get('/api/user', isAuthenticated, async (req, res) => {
 // ============ ОТМЕТИТЬ УРОК КАК ПРОЙДЕННЫЙ ============
 app.post('/api/lesson/complete', isAuthenticated, async (req, res) => {
   const { lesson_number } = req.body;
-  
+
   try {
     await LessonProgress.updateOne(
       { user_id: req.session.userId, lesson_number },
-      { 
-        completed: true, 
-        completed_at: new Date() 
+      {
+        completed: true,
+        completed_at: new Date()
       }
     );
-    
+
     res.json({ success: true });
   } catch (error) {
     console.error('Ошибка обновления прогресса:', error);
@@ -181,7 +199,7 @@ app.get('/api/progress', isAuthenticated, async (req, res) => {
     const progress = await LessonProgress.find({ user_id: req.session.userId })
       .sort({ lesson_number: 1 })
       .select('lesson_number completed completed_at');
-    
+
     res.json(progress);
   } catch (error) {
     console.error('Ошибка получения прогресса:', error);
@@ -193,7 +211,7 @@ app.get('/api/progress', isAuthenticated, async (req, res) => {
 app.post('/api/test/submit', isAuthenticated, async (req, res) => {
   const { score, total_questions, answers } = req.body;
   const passed = score >= 5;
-  
+
   try {
     const testResult = new TestResult({
       user_id: req.session.userId,
@@ -204,7 +222,7 @@ app.post('/api/test/submit', isAuthenticated, async (req, res) => {
     });
 
     await testResult.save();
-    
+
     res.json({ success: true, passed });
   } catch (error) {
     console.error('Ошибка сохранения теста:', error);
@@ -218,7 +236,7 @@ app.get('/api/test/results', isAuthenticated, async (req, res) => {
     const results = await TestResult.find({ user_id: req.session.userId })
       .sort({ taken_at: -1 })
       .select('score total_questions passed taken_at');
-    
+
     res.json({ results });
   } catch (error) {
     console.error('Ошибка получения результатов:', error);
@@ -241,8 +259,8 @@ app.post('/api/certificate/generate', isAuthenticated, async (req, res) => {
     }).sort({ taken_at: -1 });
 
     if (completedLessons < 7 || !passedTest) {
-      return res.status(400).json({ 
-        error: 'Необходимо пройти все уроки и тест с результатом не менее 5/7' 
+      return res.status(400).json({
+        error: 'Необходимо пройти все уроки и тест с результатом не менее 5/7'
       });
     }
 
@@ -250,8 +268,8 @@ app.post('/api/certificate/generate', isAuthenticated, async (req, res) => {
     let existingCert = await Certificate.findOne({ user_id: req.session.userId });
 
     if (existingCert) {
-      return res.json({ 
-        success: true, 
+      return res.json({
+        success: true,
         certificate_number: existingCert.certificate_number,
         pdf_path: existingCert.pdf_path
       });
@@ -259,10 +277,10 @@ app.post('/api/certificate/generate', isAuthenticated, async (req, res) => {
 
     // Генерация номера сертификата
     const certificateNumber = `CERT-${Date.now()}-${req.session.userId}`;
-    
+
     // Получение данных пользователя
     const user = await User.findById(req.session.userId);
-    
+
     // Генерация PDF сертификата
     const pdfPath = await generateCertificatePDF(user, certificateNumber);
 
@@ -275,8 +293,8 @@ app.post('/api/certificate/generate', isAuthenticated, async (req, res) => {
 
     await certificate.save();
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       certificate_number: certificateNumber,
       pdf_path: pdfPath
     });
@@ -298,17 +316,21 @@ app.get('/api/certificate/download', isAuthenticated, async (req, res) => {
 
     // Получаем данные пользователя для имени файла
     const user = await User.findById(req.session.userId).select('full_name username');
-    
+
     const userName = user.full_name || user.username;
     const fileName = `Сертификат_${userName.replace(/\s+/g, '_')}.pdf`;
 
-    // Устанавливаем заголовки для принудительного скачивания
+    // Абсолютный путь (на всякий случай поддержим и старые относительные пути)
+    const filePath = path.isAbsolute(cert.pdf_path)
+      ? cert.pdf_path
+      : path.join(__dirname, cert.pdf_path);
+
+    // Заголовки для скачивания
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(fileName)}"`);
     res.setHeader('Cache-Control', 'no-cache');
-    
-    // Отправляем файл
-    res.sendFile(path.resolve(cert.pdf_path));
+
+    res.sendFile(filePath);
   } catch (error) {
     console.error('Ошибка скачивания сертификата:', error);
     res.status(500).json({ error: 'Ошибка сервера' });
@@ -323,7 +345,7 @@ async function generateCertificatePDF(user, certificateNumber) {
   });
 
   const page = await browser.newPage();
-  
+
   const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -409,9 +431,9 @@ async function generateCertificatePDF(user, certificateNumber) {
       <div class="certificate">
         <h1>СЕРТИФИКАТ</h1>
         <p class="subtitle">об успешном завершении образовательной программы</p>
-        
+
         <div class="recipient-name">${user.full_name || user.username}</div>
-        
+
         <p class="description">
           Подтверждает, что вышеназванное лицо успешно прошло образовательную программу<br>
           <strong>«Реабилитация после лечения рака лёгких»</strong><br>
@@ -432,7 +454,7 @@ async function generateCertificatePDF(user, certificateNumber) {
             </div>
           </div>
         </div>
-        
+
         <div class="footer">
           <div class="date">Дата выдачи: ${new Date().toLocaleDateString('ru-RU')}</div>
           <div class="cert-number">№ ${certificateNumber}</div>
@@ -443,8 +465,10 @@ async function generateCertificatePDF(user, certificateNumber) {
   `;
 
   await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
-  
-  const pdfPath = `./certificates/${certificateNumber}.pdf`;
+
+  // Абсолютный путь к pdf
+  const pdfPath = path.join(__dirname, 'certificates', `${certificateNumber}.pdf`);
+
   await page.pdf({
     path: pdfPath,
     format: 'A4',
@@ -454,7 +478,7 @@ async function generateCertificatePDF(user, certificateNumber) {
   });
 
   await browser.close();
-  
+
   return pdfPath;
 }
 
